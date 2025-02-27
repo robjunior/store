@@ -8,13 +8,17 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import Link from 'next/link'
+import { useTransition } from 'react'
+import { createProductAction } from '@/actions/product-actions'
+import { useParams } from 'next/navigation'
 
 interface ProductFormProps {
-    action: (values: ProductFormValues) => Promise<void>
     initialData?: ProductFormValues
 }
 
-export function ProductForm({ action, initialData }: ProductFormProps) {
+export function ProductForm({ initialData }: ProductFormProps) {
+    const params = useParams()
+    const [isPending, startTransition] = useTransition()
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
         defaultValues: initialData || {
@@ -26,18 +30,21 @@ export function ProductForm({ action, initialData }: ProductFormProps) {
         }
     })
 
-    const handleSubmit = async (values: ProductFormValues) => {
-        try {
-            await action(values)
-            form.reset()
-        } catch (error) {
-            console.error('Submission error:', error)
-        }
+    const onSubmit = (values: ProductFormValues) => {
+        startTransition(async () => {
+            try {
+                if (!params.id) throw new Error('ID do produto não encontrado')
+                await createProductAction(params.id as string, values)
+                form.reset()
+            } catch (error) {
+                console.error('Erro ao atualizar:', error)
+            }
+        })
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
                     name="title"
@@ -86,8 +93,8 @@ export function ProductForm({ action, initialData }: ProductFormProps) {
                 />
 
                 <div className="flex gap-4">
-                    <Button type="submit" disabled={form.formState.isSubmitting}>
-                        {form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
+                    <Button type="submit" disabled={isPending}>
+                        {isPending ? 'Salvando...' : 'Salvar'}
                     </Button>
                     <Button variant="outline" asChild>
                         <Link href="/products">Cancelar</Link>
