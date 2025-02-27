@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Product, ProductFilters } from '@/types/product'
+import { ProductFormValues } from '@/schemas/product-schema'
 
 const API_BASE = 'https://fakestoreapi.com'
 
@@ -25,7 +26,7 @@ export class ProductService {
         }
     }
 
-    static async createProduct(data: Partial<Product>) {
+    static async createProduct(data: ProductFormValues): Promise<Product> {
         try {
             const response = await axios.post<Product>(`${API_BASE}/products`, data)
             return response.data
@@ -33,7 +34,6 @@ export class ProductService {
             throw new Error(`Failed to create product: ${error instanceof Error ? error.message : 'Unknown error'}`)
         }
     }
-
     static async updateProduct(id: string, data: Partial<Product>) {
         try {
             const response = await axios.put<Product>(`${API_BASE}/products/${id}`, data)
