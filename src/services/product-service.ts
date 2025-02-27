@@ -14,7 +14,7 @@ export class ProductService {
             }
         } catch (error) {
             throw new Error(`Failed to fetch products: ${error instanceof Error ? error.message : 'Unknown error'}`)
-        }
+        } 
     }
 
     static async getProduct(id: string) {

@@ -7,13 +7,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import Link from 'next/link'
 
 interface ProductFormProps {
+    action: (values: ProductFormValues) => Promise<void>
     initialData?: ProductFormValues
-    onSubmit: (values: ProductFormValues) => Promise<void>
 }
 
-export function ProductForm({ initialData, onSubmit }: ProductFormProps) {
+export function ProductForm({ action, initialData }: ProductFormProps) {
     const form = useForm<ProductFormValues>({
         resolver: zodResolver(productSchema),
         defaultValues: initialData || {
@@ -25,9 +26,18 @@ export function ProductForm({ initialData, onSubmit }: ProductFormProps) {
         }
     })
 
+    const handleSubmit = async (values: ProductFormValues) => {
+        try {
+            await action(values)
+            form.reset()
+        } catch (error) {
+            console.error('Submission error:', error)
+        }
+    }
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
                 <FormField
                     control={form.control}
                     name="title"
@@ -79,8 +89,8 @@ export function ProductForm({ initialData, onSubmit }: ProductFormProps) {
                     <Button type="submit" disabled={form.formState.isSubmitting}>
                         {form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}
                     </Button>
-                    <Button variant="outline" type="button">
-                        Cancelar
+                    <Button variant="outline" asChild>
+                        <Link href="/products">Cancelar</Link>
                     </Button>
                 </div>
             </form>

@@ -15,7 +15,7 @@ interface ProductListProps {
     searchParams: Record<string, string>
 }
 
-const ITEMS_PER_PAGE = 10
+const ITEMS_PER_PAGE = 3
 
 export function ProductList({ products, total, currentPage, searchParams }: ProductListProps) {
     const router = useRouter()
