@@ -3,7 +3,7 @@
 import { Product } from '@/types/product'
 import { ProductCard } from '@/components/product-card'
 import { Pagination } from '@/components/pagination'
-import { ProductFilters } from './product-filters'
+import { ProductFilters } from '@/components/product-filters'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
