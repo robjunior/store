@@ -22,7 +22,6 @@ export function ProductList({ products, total, currentPage, searchParams }: Prod
     const [isLoading, setIsLoading] = useState(true)
     const totalPages = Math.ceil(total / ITEMS_PER_PAGE)
 
-    // Simular loading para demonstração
     useEffect(() => {
         const timer = setTimeout(() => setIsLoading(false), 500)
         return () => clearTimeout(timer)
@@ -67,7 +66,7 @@ export function ProductList({ products, total, currentPage, searchParams }: Prod
                         <Pagination
                             currentPage={currentPage}
                             totalPages={totalPages}
-                            onPageChange={handlePageChange} // Remova a prop searchParams
+                            onPageChange={handlePageChange}
                         />
                     )}
                 </>
