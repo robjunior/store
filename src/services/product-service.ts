@@ -9,7 +9,7 @@ export class ProductService {
             const response = await axios.get<Product[]>(`${API_BASE}/products`, { params })
             return {
                 products: response.data,
-                total: 100 // Mock para paginação
+                total: 100
             }
         } catch (error) {
             throw new Error(`Failed to fetch products: ${error instanceof Error ? error.message : 'Unknown error'}`)
