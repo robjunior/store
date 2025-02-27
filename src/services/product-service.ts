@@ -25,6 +25,15 @@ export class ProductService {
         }
     }
 
+    static async createProduct(data: Partial<Product>) {
+        try {
+            const response = await axios.post<Product>(`${API_BASE}/products`, data)
+            return response.data
+        } catch (error) {
+            throw new Error(`Failed to create product: ${error instanceof Error ? error.message : 'Unknown error'}`)
+        }
+    }
+
     static async updateProduct(id: string, data: Partial<Product>) {
         try {
             const response = await axios.put<Product>(`${API_BASE}/products/${id}`, data)
