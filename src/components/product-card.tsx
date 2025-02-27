@@ -1,4 +1,3 @@
-// src/components/product-card.tsx
 import Image from 'next/image'
 import { Product } from '@/types/product'
 import { Button } from '@/components/ui/button'
